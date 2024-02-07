@@ -25,6 +25,7 @@ export default function CurrentTrack() {
           artists: item.artists.map((artist) => artist.name),
           image: item.album.images[2].url,
         };
+        console.log(response);
         dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
       }
     };
@@ -48,21 +49,22 @@ export default function CurrentTrack() {
 }
 const Container = styled.div`
 .track {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  &__image {
+  }
+  &__info {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    &__image {
+    flex-direction: column;
+    gap: 0.3rem;
+    h4{
+      color: white;
     }
-    &__info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-      &__track__name {
-        color: white;
-      }
-      &__track__artists {
-        color: #b3b3b3;
-      }
+    h6{
+      color: #b3b3b3;
     }
   }
+}
+
 `;
