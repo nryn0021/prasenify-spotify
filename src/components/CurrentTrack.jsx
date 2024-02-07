@@ -20,14 +20,12 @@ export default function CurrentTrack() {
       if (response.data !== "") {
         const { item } = response.data;
         const currentlyPlaying = {
-          id: response.data.item.id,
-          name: response.data.item.name,
-          artists: response.data.item.artists.map((artist) => artist.name),
-          image: response.data.item.album.images[2].url,
+          id: item.id,
+          name: item.name,
+          artists: item.artists.map((artist) => artist.name),
+          image: item.album.images[2].url,
         };
         dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
-      } else {
-        dispatch({ type: reducerCases.SET_PLAYING, currentPlaying: null });
       }
     };
     getCurrentTrack();
@@ -49,7 +47,7 @@ export default function CurrentTrack() {
   );
 }
 const Container = styled.div`
-  .track {
+.track {
     display: flex;
     align-items: center;
     gap: 1rem;
