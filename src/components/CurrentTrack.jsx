@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useStateProvider } from "../Utils/StateProvider";
 import axios from "axios";
+import { useStateProvider } from "../Utils/StateProvider";
 import { reducerCases } from "../Utils/Constants";
-
 export default function CurrentTrack() {
   const [{ token, currentlyPlaying }, dispatch] = useStateProvider();
   useEffect(() => {
@@ -12,21 +11,21 @@ export default function CurrentTrack() {
         "https://api.spotify.com/v1/me/player/currently-playing",
         {
           headers: {
-            Authorization: "Bearer " + token,
             "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
           },
         }
       );
       if (response.data !== "") {
-        const { item } = response.data;
         const currentlyPlaying = {
-          id: item.id,
-          name: item.name,
-          artists: item.artists.map((artist) => artist.name),
-          image: item.album.images[2].url,
+          id: response.data.item.id,
+          name: response.data.item.name,
+          artists: response.data.item.artists.map((artist) => artist.name),
+          image: response.data.item.album.images[2].url,
         };
-        console.log(response);
         dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
+      } else {
+        dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying: null });
       }
     };
     getCurrentTrack();
@@ -36,35 +35,37 @@ export default function CurrentTrack() {
       {currentlyPlaying && (
         <div className="track">
           <div className="track__image">
-            <img src={currentlyPlaying.image} alt="currently Playing" />
+            <img src={currentlyPlaying.image} alt="currentlyPlaying" />
           </div>
           <div className="track__info">
-            <h4>{currentlyPlaying.name}</h4>
-            <h6>{currentlyPlaying.artists.join(", ")}</h6>
+            <h4 className="track__info__track__name">{currentlyPlaying.name}</h4>
+            <h6 className="track__info__track__artists">
+              {currentlyPlaying.artists.join(", ")}
+            </h6>
           </div>
         </div>
       )}
     </Container>
   );
 }
-const Container = styled.div`
-.track {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  &__image {
-  }
-  &__info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    h4{
-      color: white;
-    }
-    h6{
-      color: #b3b3b3;
-    }
-  }
-}
 
+const Container = styled.div`
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    &__image {
+    }
+    &__info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      &__track__name {
+        color: white;
+      }
+      &__track__artists {
+        color: #b3b3b3;
+      }
+    }
+  }
 `;

@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useStateProvider } from "../Utils/StateProvider";
 import axios from "axios";
-
-import { reducerCases } from "../Utils/Constants";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import { reducerCases } from "../Utils/Constants";
+
+import { useStateProvider } from "../Utils/StateProvider";
 
 export default function Playlists() {
   const [{ token, playlists }, dispatch] = useStateProvider();
@@ -26,11 +26,18 @@ export default function Playlists() {
     };
     getPlaylistData();
   }, [token, dispatch]);
+  const changeCurrentPlaylist = (selectPlaylistId) => {
+    dispatch({ type: reducerCases.SET_PLAYLIST_ID, selectPlaylistId });
+  };
   return (
     <Container>
       <ul>
         {playlists.map(({ name, id }) => {
-          return <li key={id}>{name}</li>
+          return (
+            <li key={id} onClick={() => changeCurrentPlaylist(id)}>
+              {name}
+            </li>
+          );
         })}
       </ul>
     </Container>
@@ -38,29 +45,27 @@ export default function Playlists() {
 }
 
 const Container = styled.div`
+  color: #b3b3b3;
+  height: 100%;
+  overflow: hidden;
   ul {
-    height: 100%;
-    overflow: hidden;
-
     list-style-type: none;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
-    height: 44vh;
+    height: 55vh;
     max-height: 100%;
     overflow: auto;
-    &::-webkit-scrollbar{
-        width: 0.7rem;
-        &-thumb{
-            background-color: rgba(255,255,255,0.6);
-        }
+    &::-webkit-scrollbar {
+      width: 0.7rem;
+      &-thumb {
+        background-color: rgba(255, 255, 255, 0.6);
+      }
     }
     li {
-      display: flex;
-      gap: 1rem;
-      cursor: pointer;
       transition: 0.3s ease-in-out;
+      cursor: pointer;
       &:hover {
         color: white;
       }
